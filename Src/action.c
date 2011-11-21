@@ -56,7 +56,7 @@ int CallIt(Action *action, XEvent *xev) {
 			rc=fork();
 			if (rc==0) { /* child */
 				action->call(action, xev);
-				exit();
+				exit(3);
 				}
 			}
 		else action->call(action, xev);
