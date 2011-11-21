@@ -1,0 +1,31 @@
+
+Some event masks are not set properly in table.c, an easy way to disable
+them from use.  Most are *Request types, which are used if you can send
+events too; since xevact can not send events yet, those few event types are
+disabled.
+
+Adding new tests or Actions:
+  Under Src/tests and Src/actions are a bunch of tiny C files, each of
+  which contain one test or action function.  The filenames are the name of
+  the function plus ".c".  This makes it easy to add new functions and to
+  update the input tables.  All you do to add new ones is to write the
+  function, naming the file with the function name, and use make_actions or
+  make_tests (depending on the directory) to rebuild the include files.
+
+  This way you can just drop new functions into the directory and recompile,
+  everything should work correctly --you can trade new functions or tests with
+  your friends.
+
+  You will want to check out the file Src/h/xevact_struct.h for the action
+  structure; it gets passed to test and action functions so they can have
+  access to any of a wide range of data, but all have the same parameters.
+  
+Tests and actions calls are looked up in the same table, and no difference
+is made between them.  So, a call can be used where the program expects an
+action, resulting in a core-dump (or undefined behavior).
+
+AF sound drops out;  it doesn't play the first bit of the sound.  It calls
+AFGetTime() and then AFPlaySamples() with that time.  If anyone knows what
+the problem is, please let me know!
+
+	--JAM (jmaxwell@acm.vt.edu)

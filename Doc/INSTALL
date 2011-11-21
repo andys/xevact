@@ -1,0 +1,31 @@
+
+Hopefully everything will compile, but I've only tried it on Digital Unix &
+the DECstation, and have little experience writing portable code.  Sorry, no
+Imakefile! :(
+
+cd Src
+Edit the Makefile for Xlibs and sound (if you have Audiofile).
+make all
+cd ..
+
+You may want to edit Src/h/xevact_const.h, say to change the default
+data file.
+
+"xevact -help" for usage.
+
+This is all documented in the sample actions files:
+	Dat/print.event		detailed info
+	Dat/print.keys		just the keys pressed
+	Dat/play.sounds		sounds for some events
+
+The pathnames in the sounds example are in the form Dat/sounds/file.au, so
+run it from the top directory or it won't be able to find the files.
+
+From the top directory, you can try it with these commands:
+	./xevact -actions Dat/print.event
+	./xevact -actions Dat/print.keys
+	./xevact -actions Dat/play.sounds
+
+	--JAM (jmaxwell@acm.vt.edu)
+
+

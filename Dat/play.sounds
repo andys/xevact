@@ -1,0 +1,99 @@
+# Case is important!
+
+
+# Valid Event Types
+#
+# KeyPress		KeyRelease		ButtonPress [2]	MotionNotify
+# EnterNotify		LeaveNotify		FocusIn		KeymapNotify
+# CreateNotify		DestroyNotify		UnmapNotify	MapRequest [1]
+# Expose		GraphicsExpose		NoExpose	
+# GravityNotify		ResizeRequest	 [1]	CirculateNotify	
+# SelectionNotify	ColormapNotify		ClientMessage	
+# PropertyNotify	SelectionClear		SelectionRequest [1]
+# ConfigureNotify	ConfigureRequest [1]	ReparentNotify	
+# ButtonRelease		FocusOut		MapNotify
+# VisibilityNotify	CirculateRequest [1]	MappingNotify
+# [1] -- These events are for window-managers and the like; since this
+#	 program doesn't /send/ events (yet), these are disabled.
+# [2] -- Only one client can select ButtonPress events per window;
+#	 Selecting this will likely cause the program to fail --use
+#	 ButtonRelease instead.
+
+
+# Valid Test-Functions
+#
+#	Name		Condition [1]
+#	Test_State	state code (Shift, Control, Meta, Compose)
+#	Test_KeyCode	keysym or keycode ('a', "Shift", 129)
+#	Test_True
+#	Test_False
+#	-
+#[1] -- The condition may be:
+#         o  a number, interpreted as a literal (used for specifying
+#	     literal keycodes found from the PrintEvent call.)
+#	  o  a string enclosed in quotes ('' or ""), intepreted as
+#	     a text keysym and converted into a keycode.
+#	  o  a string not enclosed in quotes.  The value is gotten
+#	     from an internal program table; used for things like
+#	     shift, control, etc for states.
+#	(literal keycodes are server dependant: Avoid them!)
+
+
+# Valid Calls (Actions)
+#
+#	Name		Parameters		Meaning
+#	PlaySound	filename		plays the filename
+#	System		/bin/sh cmd line	string is passed to system()		
+#	PrintStr	string			printf("%s\n",string);
+#	PrintKey				print key as ascii
+#	PrintEvent				print loads of event info
+#	NoAction				does nothing
+#	-					does nothing
+
+# Valid Flags
+#
+#	Flag		Meaning
+#	S		if the call-function was called, do not go on.
+#	T		terminate after this action, processed or not!
+#	F		fork() and call this action in a subprocess.
+#	D		always set action's prev time to the current time.
+#	-		No Flags
+# S|T --These are useful for excluding other specific actions.  They are
+#	also useful when dealing with delay-times.
+# F  -- This is mainly put in for the AudioFile sound function;  playing
+#	samples doesn't return until all the data has been sent to the
+#	server, so for large files this is basically the time spent to play
+#	the file.  By forking a new process, we can conintue to handle
+#	new events while the large sample is playing. (this works for any
+#	action-call, however it adds a bit of overhead).  Plus, the file
+#	only gets loaded in the forked process so it doesn't hang around in
+#	memory.
+# D  -- keep delaying the action; set the action's last time to current
+#	even if the action was not performed because it happened too close
+#	to the last time.
+
+# Notes
+#
+#   1	The DEFAULT action only happens if no other actions were done for 
+#	particular event.  So if you have an event with no test-functions
+#	then the default will /never/ happen.
+#   2	Specifying the DEFAULT action counts as a test-function.
+#   3   Keycodes: 'a' is equal to 'A' --you need to use Test_State to
+#	select between them.
+#   4	The delay is measured in seconds,millisecs (.1 sec == 100000 usec)
+#   5	To test for multiple states, you must use a Test_State for each one.
+#   6	Putting a "!" before the test-function switches True/False for that test.
+
+#EventType	Flags	Delay	#tests	Function	Test	Function	Test	Call-Function	FunctionParameters
+KeyPress	S	0,0	2	Test_KeyCode	'c'	Test_State	Control	PlaySound	sounds/beep_bassoon_and_bone.au
+
+#EventType	Flags	Delay	#tests	Function	Test	Call-Function	FunctionParameters
+KeyPress	FS	30,0	1	Test_KeyCode	125	PlaySound	/home/jmaxwell/work/dl/pub/sounds/songs/techno/808state/BJORK-HUMAN_BEHAVIOUR.au
+KeyPress	S	0,0	1	Test_KeyCode	"Return" PlaySound	sounds/blip.au
+KeyPress	S	0,0	1	Test_KeyCode	"space"	PlaySound	sounds/tap4.au
+KeyPress	-	0,0	1	-		-	PlaySound	sounds/tap3.au
+#KeyPress	-	0,0	1	-		-	PrintEvent	sounds/click2.au
+
+#MotionNotify	D	2,0	1	DEFAULT		-	PlaySound	sounds/horserun.au
+EnterNotify	-	0,100000 1	DEFAULT		-	PlaySound	sounds/Clang_#1.au
+ColormapNotify	-	0,500000 1	DEFAULT		-	PlaySound	sounds/magic.au

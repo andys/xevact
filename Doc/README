@@ -1,0 +1,30 @@
+
+Okay, read the INSTALL to get it set up.
+
+What the program is supposed to to is to let you take x-windows
+events and do things (actions) with them.  My original concept
+was just to make the computer sound like an old IBM Selectric (I
+think I spelled that right), but I couldn't find the sounds for
+it :(
+
+Anyhow, you can do that, but you can also do something with just
+about any x-windows event... from ColormapNotify to Expose, and
+of course the KeyPress too! ;) And you can do a bunch of things
+for the same event, or just one thing (or nothing).
+
+The program reads expressions from a file.  Each expression
+(currently expressions are the same as lines of text) consists of
+tests and an action.  When an event comes in, it is checked
+agains all expressions;  the tests for that expression are given
+the event.  If all the tests are true, the action function is
+called.
+
+It should be really easy to build new tests and action functions to suit
+your needs, and it is one way of getting around the awkward
+syntax xevact uses.  See the NOTES for details.
+
+So like, send comments and stuff (and if you write new tests,
+actions send me the source code for it!) to jmaxwell@acm.vt.edu
+
+	--JAM
+

@@ -1,0 +1,26 @@
+#!/bin/sh
+
+TABLE=../h/xevact_actions_table.h
+DECLARE=../h/xevact_actions_declare.h
+
+#erase old files
+echo >$TABLE
+echo >$DECLARE
+echo >Makefile
+
+echo -n 'OBJS=' >>Makefile
+
+ACTIONS=*.c
+for x in $ACTIONS; do
+	FUNCNAME=`basename $x .c`
+	echo "{\"$FUNCNAME\", CALL_ACTION, $FUNCNAME}," >>$TABLE
+	echo -n "$FUNCNAME.o " >>Makefile
+	echo "int $FUNCNAME" '(Action *action, XEvent *xev) ;' >>$DECLARE
+	done
+
+echo >>Makefile
+echo >>Makefile
+echo '.c.o:' >>Makefile
+echo '	$(CC) $(CFLAGS) -c $*.c -o $*.o' >>Makefile
+echo 'all: $(OBJS)' >>Makefile
+echo '	@echo Actions Compiled' >>Makefile
